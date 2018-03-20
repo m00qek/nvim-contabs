@@ -1,6 +1,16 @@
-function! s:edit_project_buffer(line)
-  let filepath = substitute(a:line[1], '\[[0-9]*\] ', basedir, '')
-  execute 'edit' filepath
+function! s:keyToAction(key)
+  let actions = { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit', 'ctrl-v': 'vsp', 'ctrl-x': 'sp' }
+  return get(actions, a:key, 'edit')
+endfunction
+
+function! s:go_to_proj(key, dirname)
+  execute s:keyToAction(a:key) . ' ' .  a:dirname
+  execute "tcd" a:dirname
+endfunction
+
+function! s:got_to_buffer(key, basedir, line)
+  let filepath = substitute(a:line, '\[[0-9]*\] ', a:basedir.'/', '')
+  execute s:keyToAction(a:key) . ' ' .  filepath
 endfunction
 
 function! s:project_buffers()
@@ -25,19 +35,9 @@ function! s:project_buffers()
 
   return fzf#run(fzf#wrap('project_buffers', {
    \ 'source':  lines,
-   \ 'sink*':   { args-> s:edit_buffer(args[0]) },
-   \ 'options': '+m --header-lines=0 --tiebreak=index'
+   \ 'sink*':   { args-> s:go_to_buffer(args[0], basedir, args[1]) },
+   \ 'options': '+m --header-lines=0 --expect=ctrl-e,ctrl-t,ctrl-x,ctrl-v --tiebreak=index'
    \ }, 0))
-endfunction
-
-function! s:go_to_proj(newtab, dirname)
-  if a:newtab
-    execute "tabedit" a:dirname
-  else
-    execute "edit" a:dirname
-  endif
-
-  execute "tcd" a:dirname
 endfunction
 
 function! s:select_proj()
@@ -48,7 +48,7 @@ function! s:select_proj()
   return fzf#run(fzf#wrap('projects',{
    \ 'source':  list_projects,
    \ 'dir':     projectDir,
-   \ 'sink*':   { args -> s:go_to_proj(args[0] =~ 'ctrl-t', projectDir . args[1]) },
+   \ 'sink*':   { args -> s:go_to_proj(args[0], projectDir . args[1]) },
    \ 'options': '+m --header-lines=0 --expect=ctrl-e,ctrl-t --tiebreak=index'}, 0))
 endfunction
 
