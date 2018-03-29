@@ -4,8 +4,8 @@ function! s:keyToAction(key)
 endfunction
 
 function! s:go_to_proj(key, dirname)
-  execute "tcd" a:dirname
   execute s:keyToAction(a:key) . ' ' .  a:dirname
+  execute "tcd" a:dirname
 endfunction
 
 function! s:go_to_buffer(key, basedir, line)
