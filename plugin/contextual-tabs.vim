@@ -44,8 +44,10 @@ function! s:project_buffers()
 endfunction
 
 function! s:subdirectories(directory, depth, git_only)
+  let l:basedir = expand(a:directory) . '/'
+
   if a:depth <= 0
-    return a:directory
+    return {a:directory: l:basedir}
   endif
 
   let l:glob = join(map(range(a:depth), { _ -> '*/' }), '')
@@ -53,11 +55,9 @@ function! s:subdirectories(directory, depth, git_only)
     let l:glob = l:glob . '.git'
   endif
 
-  let l:basedir = expand(a:directory) . '/'
-
   let l:subdirs = {}
-  for dir in glob(l:basedir . l:glob, 1, 1)
-    let l:formatted_dir = substitute(dir, '/.git$\|/$', '', '')
+  for l:dir in glob(l:basedir . l:glob, 1, 1)
+    let l:formatted_dir = substitute(l:dir, '/.git$\|/$', '', '')
 
     let l:key = substitute(l:formatted_dir, l:basedir, '', '')
 
@@ -67,8 +67,18 @@ function! s:subdirectories(directory, depth, git_only)
   return l:subdirs
 endfunction
 
+let g:contabs#projects#locations = [
+  \ { 'path': '~/projects', 'depth': 2, 'git_only': 1 },
+  \ { 'path': '~/.config/nvim', 'depth': 0, 'git_only': 0 },
+  \ { 'path': '$GOPATH/src/github.com/nubank', 'depth': 1, 'git_only': 1 }
+  \]
+
 function! s:select_proj()
-  let l:projects = s:subdirectories('~/projects', 2, 1)
+  let l:projects = {}
+  for l:proj in g:contabs#projects#locations
+    let l:subdirs = s:subdirectories(l:proj.path, l:proj.depth, l:proj.git_only)
+    call extend(l:projects, l:subdirs)
+  endfor
 
   return fzf#run(fzf#wrap('projects',{
    \ 'source':  sort(keys(l:projects)),
