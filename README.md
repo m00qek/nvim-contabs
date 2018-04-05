@@ -9,7 +9,7 @@ directory of current tab (using the `tcd` command from neovim).
 
 nvim-contabs depends on [fzf](https://github.com/junegunn/fzf) and, optionally, on [vim-airline](https://github.com/vim-airline/vim-airline). If you use vim-plug:
 
-```
+```viml
 Plug 'm00qek/nvim-contabs'
 ```
 
@@ -48,6 +48,6 @@ nnoremap <silent> <Leader>b :call contabs#buffer#select()<CR>
 by default this plugin changes titles of tabs to the name of the working
 directory. If you want to disable this feature add to your vimrc
 
-```
+```viml
 let g:contabs#integrations#airline = 0
 ```
