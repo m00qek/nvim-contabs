@@ -1,4 +1,3 @@
-nvim-contabs
 Contextual tabs for neovim
 
 ---
