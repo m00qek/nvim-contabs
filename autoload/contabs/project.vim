@@ -39,7 +39,7 @@ endfunction
 
 function! contabs#project#select()
   let l:projects = {}
-  for l:proj in g:contabs#projects#locations
+  for l:proj in g:contabs#project#locations
     let l:subdirs = s:subdirectories(l:proj.path, l:proj.depth, l:proj.git_only)
     call extend(l:projects, l:subdirs)
   endfor
