@@ -2,7 +2,7 @@ Contextual tabs for neovim
 
 ---
 
-this plugin adds some functions and `[fzf](https://github.com/junegunn/fzf) commands to change the working
+this plugin adds some functions and [fzf](https://github.com/junegunn/fzf) commands to change the working
 directory of current tab (using the `tcd` command from neovim).
 
 ### Installation
