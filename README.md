@@ -10,7 +10,7 @@ directory of current tab (using the `tcd` command from neovim).
 nvim-contabs depends on [fzf](https://github.com/junegunn/fzf) and, optionally, on [vim-airline](https://github.com/vim-airline/vim-airline). If you use vim-plug:
 
 ```
-Plug 'm00qeka/vim-contabs'
+Plug 'm00qeka/nvim-contabs'
 ```
 
 ### Configuration
