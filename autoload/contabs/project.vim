@@ -1,8 +1,8 @@
 function! s:subdirectories(directory, depth, git_only)
-  let l:basedir = expand(a:directory) . '/'
+  let l:base_directory = expand(a:directory) . '/'
 
   if a:depth <= 0
-    return {a:directory: l:basedir}
+    return { a:directory: l:base_directory }
   endif
 
   let l:glob = join(map(range(a:depth), { _ -> '*/' }), '')
@@ -11,19 +11,18 @@ function! s:subdirectories(directory, depth, git_only)
   endif
 
   let l:subdirs = {}
-  for l:dir in glob(l:basedir . l:glob, 1, 1)
-    let l:formatted_dir = substitute(l:dir, '/.git$\|/$', '', '')
+  for l:search_result in glob(l:base_directory . l:glob, 1, 1)
+    let l:raw_directory = substitute(l:search_result, '/.git$\|/$', '', '')
 
-    let l:key = substitute(l:formatted_dir, l:basedir, '', '')
-
-    let l:subdirs[l:key] = l:formatted_dir
+    let l:pretty_entry = substitute(l:raw_directory, l:base_directory, '', '')
+    let l:subdirs[l:pretty_entry] = l:raw_directory
   endfor
 
   return l:subdirs
 endfunction
 
 function! s:open(key, directory)
-  let l:actions = { 'ctrl-t': 'tabedit', 'ctrl-v': 'vsp', 'ctrl-x': 'sp' }
+  let l:actions = { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit' }
 
   execute get(l:actions, a:key, 'edit') . ' ' .  a:directory
   execute "tcd" a:directory
