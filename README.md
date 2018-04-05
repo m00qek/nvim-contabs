@@ -21,7 +21,7 @@ add something like the following on your vimrc
 "configure the locations of projects. In this example:
 " - add directories satisfying '~/projects/*/*/.git'
 " - add only '~/.config/nvim'
-" - add satisfying '$GOPATH/src/github.com/libgit2/*'
+" - add directories satisfying '$GOPATH/src/github.com/libgit2/*'
 let g:contabs#project#locations = [
   \ { 'path': '~/projects', 'depth': 2, 'git_only': 1 },
   \ { 'path': '~/.config/nvim', 'depth': 0, 'git_only': 0 },
