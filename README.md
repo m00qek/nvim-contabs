@@ -1,15 +1,15 @@
-vim-contabs
+nvim-contabs
 Contextual tabs for neovim
 
-====
+---
 
-this plugin adds some functions and `fzf` commands to change the working
+this plugin adds some functions and `[fzf](https://github.com/junegunn/fzf) commands to change the working
 directory of current tab (using the `tcd` command from neovim).
 
 ### Installation
 
-vim-contabs depends on _fzf.vim_ and, optionally, on _vim-airline_. If you use
-vim-plug:
+nvim-contabs depends on [fzf](https://github.com/junegunn/fzf) and, optionally, on [vim-airline](https://github.com/vim-airline/vim-airline). If you use vim-plug:
+
 ```
 Plug 'm00qeka/vim-contabs'
 ```
@@ -34,8 +34,8 @@ nnoremap <silent> <Leader>b :call contabs#buffer#select()<CR>
 
 ### vim-airline
 
-by default this plugin changes the titles of tabs to the name of the tab working
-directory. If you want to disble thie feature add to your vimrc
+by default this plugin changes titles of tabs to the name of the working
+directory. If you want to disable this feature add to your vimrc
 
 ```
 let g:contabs#integrations#airline = 0
