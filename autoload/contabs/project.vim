@@ -7,24 +7,31 @@ function! s:hotkeys()
   return join(keys(s:actions), ',')
 endfunction
 
-function! s:subdirectories(directory, depth, git_only)
-  let l:base_directory = expand(a:directory) . '/'
-
-  if a:depth <= 0
-    return { a:directory: l:base_directory }
+function! s:get_formatter(location, base_directory)
+  if has_key(a:location, 'formatter')
+    return a:location.formatter
   endif
 
-  let l:glob = join(map(range(a:depth), { _ -> '*/' }), '')
-  if a:git_only
+  if a:location.depth <= 0
+    return { -> a:location.path }
+  endif
+
+  return { directory -> substitute(directory, a:base_directory, '', '') }
+endfunction
+
+function! s:subdirectories(location)
+  let l:base_directory = expand(a:location.path) . '/'
+  let l:Format = s:get_formatter(a:location, l:base_directory)
+
+  let l:glob = join(map(range(a:location.depth), { _ -> '*/' }), '')
+  if a:location.git_only
     let l:glob = l:glob . '.git'
   endif
 
   let l:subdirs = {}
   for l:search_result in glob(l:base_directory . l:glob, 1, 1)
     let l:raw_directory = substitute(l:search_result, '/.git$\|/$', '', '')
-
-    let l:pretty_entry = substitute(l:raw_directory, l:base_directory, '', '')
-    let l:subdirs[l:pretty_entry] = l:raw_directory
+    let l:subdirs[l:Format(l:raw_directory)] = l:raw_directory
   endfor
 
   return l:subdirs
@@ -32,10 +39,11 @@ endfunction
 
 function! s:all_projects()
   let l:projects = {}
-  for l:proj in g:contabs#project#locations
-    let l:subdirs = s:subdirectories(l:proj.path, l:proj.depth, l:proj.git_only)
-    call extend(l:projects, l:subdirs)
+
+  for l:location in g:contabs#project#locations
+    call extend(l:projects, s:subdirectories(location))
   endfor
+
   return l:projects
 endfunction
 
