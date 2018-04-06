@@ -1,3 +1,18 @@
+let s:actions = {
+  \ 'ctrl-t': 'tabedit',
+  \ 'ctrl-v': 'vsplit',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-e': 'edit'
+  \ }
+
+function! s:hotkeys()
+  return join(keys(s:actions), ',')
+endfunction
+
+function! s:open(key, filepath)
+  execute get(s:actions, a:key, 'edit') . ' ' .  a:filepath
+endfunction
+
 function! s:starts_with(prefix, text)
   return stridx(a:text, a:prefix) == 0
 endfunction
@@ -14,11 +29,6 @@ function! s:format(number, filepath, base_directory)
   let l:formatted_path = substitute(a:filepath, a:base_directory . '/', '', '')
 
   return l:formatted_number . ' ' . l:formatted_path
-endfunction
-
-function! s:open(key, filepath)
-  let actions = { 'ctrl-t': 'tabedit', 'ctrl-v': 'vsp', 'ctrl-x': 'sp' }
-  execute get(actions, a:key, 'edit') . ' ' .  a:filepath
 endfunction
 
 function! s:buffers(base_directory)
@@ -46,7 +56,7 @@ function! contabs#buffer#select()
   return fzf#run(fzf#wrap('project_buffers', {
    \ 'source':  sort(keys(l:buffers)),
    \ 'sink*':   { args -> s:open(args[0], l:buffers[args[1]]) },
-   \ 'options': '+m --header-lines=0 --expect=ctrl-e,ctrl-t,ctrl-x,ctrl-v --tiebreak=index' },
+   \ 'options': '+m --header-lines=0 --expect=' . s:hotkeys() . ' --tiebreak=index' },
    \ 0))
 endfunction
 
