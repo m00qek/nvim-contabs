@@ -22,10 +22,12 @@ add something like the following on your vimrc
 " - add directories satisfying '~/projects/*/*/.git'
 " - add only '~/.config/nvim'
 " - add directories satisfying '$GOPATH/src/github.com/libgit2/*'
+" - add directories satisfying '~/haskell/*/.git' and show 'λ | ' before their paths
 let g:contabs#project#locations = [
   \ { 'path': '~/projects', 'depth': 2, 'git_only': 1 },
   \ { 'path': '~/.config/nvim', 'depth': 0, 'git_only': 0 },
-  \ { 'path': '$GOPATH/src/github.com/libgit2', 'depth': 1, 'git_only': 0 } 
+  \ { 'path': '$GOPATH/src/github.com/libgit2', 'depth': 1, 'git_only': 0 }
+  \ { 'path': '~/haskell', 'depth': 1, 'git_only': 1, 'formatter': { dirpath -> 'λ | ' . dirpath } }
   \]
 
 "command to change the current tab's workingdir
