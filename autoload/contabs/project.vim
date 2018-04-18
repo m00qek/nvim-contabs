@@ -56,11 +56,11 @@ endfunction
 
 
 function! contabs#project#edit(directory)
-  call s:open('ctrl-e', a:directory)
+  call s:open('ctrl-e', [{}, a:directory])
 endfunction
 
 function! contabs#project#tabedit(directory)
-  call s:open('ctrl-t', a:directory)
+  call s:open('ctrl-t', [{}, a:directory])
 endfunction
 
 function! contabs#project#select()
