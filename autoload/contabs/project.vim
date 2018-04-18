@@ -50,7 +50,17 @@ endfunction
 function! s:open(key, context)
   let [ l:config, l:directory ] = a:context
 
-  execute get(s:actions, a:key, 'edit') . ' ' .  l:directory
+  let l:entrypoints = get(l:config, 'entrypoint', [])
+
+  let l:welcome_path = l:directory
+  for l:entrypoint in l:entrypoints
+    if filereadable(l:directory . '/' . l:entrypoint)
+      let l:welcome_path = l:directory . '/' . l:entrypoint
+      break
+    endif
+  endfor
+
+  execute get(s:actions, a:key, 'edit') . ' ' .  l:welcome_path
   execute "tcd" l:directory
 endfunction
 
