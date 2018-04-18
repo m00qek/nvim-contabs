@@ -31,7 +31,7 @@ function! s:subdirectories(location)
   let l:subdirs = {}
   for l:search_result in glob(l:base_directory . l:glob, 1, 1)
     let l:raw_directory = substitute(l:search_result, '/.git$\|/$', '', '')
-    let l:subdirs[l:Format(l:raw_directory)] = l:raw_directory
+    let l:subdirs[l:Format(l:raw_directory)] = [ a:location, l:raw_directory ]
   endfor
 
   return l:subdirs
@@ -47,9 +47,11 @@ function! s:all_projects()
   return l:projects
 endfunction
 
-function! s:open(key, directory)
-  execute get(s:actions, a:key, 'edit') . ' ' .  a:directory
-  execute "tcd" a:directory
+function! s:open(key, context)
+  let [ l:config, l:directory ] = a:context
+
+  execute get(s:actions, a:key, 'edit') . ' ' .  l:directory
+  execute "tcd" l:directory
 endfunction
 
 
