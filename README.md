@@ -5,6 +5,8 @@ Contextual tabs for neovim
 this plugin adds some functions and [fzf](https://github.com/junegunn/fzf) commands to change the working
 directory of current tab (using the `tcd` command from neovim).
 
+![nvim-contabs in action](sample.gif)
+
 ### Installation
 
 nvim-contabs depends on [fzf](https://github.com/junegunn/fzf) and, optionally, on [vim-airline](https://github.com/vim-airline/vim-airline). If you use vim-plug:
