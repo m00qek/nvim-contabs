@@ -1,8 +1,3 @@
-let s:actions = {
-  \ 'ctrl-t': 'tabedit',
-  \ 'ctrl-e': 'edit'
-  \ }
-
 function! s:get_formatter(location, base_directory)
   if has_key(a:location, 'formatter')
     return a:location.formatter
@@ -15,17 +10,33 @@ function! s:get_formatter(location, base_directory)
   return { directory -> substitute(directory, a:base_directory, '', '') }
 endfunction
 
-function! s:subdirectories(location)
-  let l:base_directory = expand(a:location.path) . '/'
-  let l:Format = s:get_formatter(a:location, l:base_directory)
+function! s:get_entrypoint(location, directory)
+  for l:entrypoint in get(a:location, 'entrypoint', [])
+    if filereadable(a:directory . '/' . l:entrypoint)
+      return a:directory . '/' . l:entrypoint
+    endif
+  endfor
 
-  let l:glob = join(map(range(a:location.depth), { _ -> '*/' }), '')
+  return a:directory
+endfunction
+
+function! s:get_search_pattern(location, base_directory)
+  let l:pattern = join(map(range(a:location.depth), { _ -> '*/' }), '')
+
   if a:location.git_only
-    let l:glob = l:glob . '.git'
+    return a:base_directory . l:pattern . '.git'
   endif
 
+  return a:base_directory . l:pattern
+endfunction
+
+function! s:subdirectories(location)
+  let l:base_directory = expand(a:location.path) . '/'
+  let l:search_pattern = s:get_search_pattern(a:location, l:base_directory)
+  let l:Format = s:get_formatter(a:location, l:base_directory)
+
   let l:subdirs = {}
-  for l:search_result in glob(l:base_directory . l:glob, 1, 1)
+  for l:search_result in glob(l:search_pattern, 1, 1)
     let l:raw_directory = substitute(l:search_result, '/.git$\|/$', '', '')
     let l:subdirs[l:Format(l:raw_directory)] = [ a:location, l:raw_directory ]
   endfor
@@ -43,34 +54,24 @@ function! s:all_projects()
   return l:projects
 endfunction
 
-function! s:open(key, context)
-  let [ l:config, l:directory ] = a:context
-
-  let l:entrypoints = get(l:config, 'entrypoint', [])
-
-  let l:welcome_path = l:directory
-  for l:entrypoint in l:entrypoints
-    if filereadable(l:directory . '/' . l:entrypoint)
-      let l:welcome_path = l:directory . '/' . l:entrypoint
-      break
-    endif
-  endfor
-
-  execute get(s:actions, a:key, 'edit') . ' ' .  l:welcome_path
+function! s:open(command, context)
+  let [ l:location, l:directory ] = a:context
+  execute a:command . ' ' .  s:get_entrypoint(l:location, l:directory)
   execute "tcd" l:directory
 endfunction
 
 
 function! contabs#project#edit(directory)
-  call s:open('ctrl-e', [{}, a:directory])
+  call s:open('edit', [{}, a:directory])
 endfunction
 
 function! contabs#project#tabedit(directory)
-  call s:open('ctrl-t', [{}, a:directory])
+  call s:open('tabedit', [{}, a:directory])
 endfunction
 
 function! contabs#project#select()
-  let l:hotkeys = contabs#window#hotkeys(s:actions)
-  return contabs#window#open('projects', l:hotkeys, s:all_projects(),
-  \                          funcref('s:open'))
+  let l:actions = { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit' }
+
+  return contabs#window#open(
+  \ 'projects', l:actions, s:all_projects(), funcref('s:open'))
 endfunction
