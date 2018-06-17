@@ -5,10 +5,6 @@ let s:actions = {
   \ 'ctrl-e': 'edit'
   \ }
 
-function! s:hotkeys()
-  return join(keys(s:actions), ',')
-endfunction
-
 function! s:open(key, filepath)
   execute get(s:actions, a:key, 'edit') . ' ' .  a:filepath
 endfunction
@@ -51,12 +47,7 @@ function! s:buffers(base_directory)
 endfunction
 
 function! contabs#buffer#select()
-  let l:buffers = s:buffers(getcwd())
-
-  return fzf#run(fzf#wrap('project_buffers', {
-   \ 'source':  sort(keys(l:buffers)),
-   \ 'sink*':   { args -> s:open(args[0], l:buffers[args[1]]) },
-   \ 'options': '+m --header-lines=0 --expect=' . s:hotkeys() . ' --tiebreak=index' },
-   \ 0))
+  let l:hotkeys = contabs#window#hotkeys(s:actions)
+  return contabs#window#open('projects', l:hotkeys, s:buffers(getcwd()),
+  \                          funcref('s:open'))
 endfunction
-

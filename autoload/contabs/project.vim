@@ -3,10 +3,6 @@ let s:actions = {
   \ 'ctrl-e': 'edit'
   \ }
 
-function! s:hotkeys()
-  return join(keys(s:actions), ',')
-endfunction
-
 function! s:get_formatter(location, base_directory)
   if has_key(a:location, 'formatter')
     return a:location.formatter
@@ -74,11 +70,7 @@ function! contabs#project#tabedit(directory)
 endfunction
 
 function! contabs#project#select()
-  let l:projects = s:all_projects()
-
-  return fzf#run(fzf#wrap('projects',{
-   \ 'source':  sort(keys(l:projects)),
-   \ 'sink*':   { args -> s:open(args[0], l:projects[args[1]]) },
-   \ 'options': '+m --header-lines=0 --expect=' . s:hotkeys() . ' --tiebreak=index' },
-   \ 0))
+  let l:hotkeys = contabs#window#hotkeys(s:actions)
+  return contabs#window#open('projects', l:hotkeys, s:all_projects(),
+  \                          funcref('s:open'))
 endfunction
