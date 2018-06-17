@@ -73,5 +73,5 @@ function! contabs#project#select()
   let l:actions = { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit' }
 
   return contabs#window#open(
-  \ 'projects', l:actions, s:all_projects(), funcref('s:open'))
+  \ 'projects', s:all_projects(), funcref('s:open'), [ 'edit', l:actions ])
 endfunction

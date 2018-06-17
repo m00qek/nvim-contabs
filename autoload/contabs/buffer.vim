@@ -49,5 +49,5 @@ function! contabs#buffer#select()
     \ }
 
   return contabs#window#open(
-  \ 'buffers', s:actions, s:buffers(getcwd()), funcref('s:open'))
+  \ 'buffers', s:buffers(getcwd()), funcref('s:open'), [ 'edit', s:actions ])
 endfunction
