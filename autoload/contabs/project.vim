@@ -30,6 +30,23 @@ function! s:get_search_pattern(location, base_directory)
   return a:base_directory . l:pattern
 endfunction
 
+function! s:location_for_path(directory)
+  let l:absulote_directory = expand(a:directory) . '/'
+
+  for l:location in g:contabs#project#locations
+    let l:base_directory = expand(l:location.path) . '/'
+
+    let l:search_pattern = s:get_search_pattern(l:location, l:base_directory)
+    let l:search_pattern = substitute(l:search_pattern, '/\.git$', '', '')
+    let l:search_pattern = glob2regpat(l:search_pattern)
+
+    if match(l:absulote_directory, l:search_pattern) == 0
+      return [l:location, l:absulote_directory]
+    endif
+  endfor
+  return [{}, l:absulote_directory]
+endfunction
+
 function! s:subdirectories(location)
   let l:base_directory = expand(a:location.path) . '/'
   let l:search_pattern = s:get_search_pattern(a:location, l:base_directory)
@@ -62,11 +79,13 @@ endfunction
 
 
 function! contabs#project#edit(directory)
-  call s:open('edit', [{}, a:directory])
+  let l:location = s:location_for_path(a:directory)
+  call s:open('edit', l:location)
 endfunction
 
 function! contabs#project#tabedit(directory)
-  call s:open('tabedit', [{}, a:directory])
+  let l:location = s:location_for_path(a:directory)
+  call s:open('tabedit', l:location)
 endfunction
 
 function! contabs#project#select()
