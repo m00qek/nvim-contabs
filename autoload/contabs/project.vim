@@ -12,8 +12,10 @@ endfunction
 
 function! s:get_entrypoint(location, directory)
   for l:entrypoint in get(a:location, 'entrypoint', [])
-    if filereadable(a:directory . '/' . l:entrypoint)
-      return a:directory . '/' . l:entrypoint
+    let l:entry = expand(a:directory . '/' . l:entrypoint)
+
+    if filereadable(l:entry)
+      return l:entry
     endif
   endfor
 
