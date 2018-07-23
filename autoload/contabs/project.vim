@@ -1,6 +1,6 @@
 function! s:project_for_path(directory)
-  let l:locations = contabs#project#locations
-  return [contabs#location#find_by(a:directory, l:locations), l:directory]
+  let l:locations = g:contabs#project#locations
+  return [contabs#location#find_by(a:directory, l:locations), a:directory]
 endfunction
 
 function! s:projects(location)
@@ -34,12 +34,12 @@ endfunction
 
 
 function! contabs#project#edit(directory)
-  let l:project = s:project_for_path(expand(a:directory) . '/')
+  let l:project = s:project_for_path(expand(a:directory))
   call s:open('edit', l:project)
 endfunction
 
 function! contabs#project#tabedit(directory)
-  let l:project = s:project_for_path(expand(a:directory) . '/')
+  let l:project = s:project_for_path(expand(a:directory))
   call s:open('tabedit', l:project)
 endfunction
 

@@ -15,9 +15,9 @@ function! s:format(number, filepath, base_directory)
   let l:formatted_number = '[' . a:number . ']'
   let l:formatted_number = (a:number >= 10 ? '' : ' ') . l:formatted_number
 
-  let l:formatted_path = substitute(a:filepath, a:base_directory . '/', '', '')
+  let l:relative_path = contabs#path#relative(a:base_directory, a:filepath)
 
-  return l:formatted_number . ' ' . l:formatted_path
+  return l:formatted_number . ' ' . l:relative_path
 endfunction
 
 function! s:buffers(base_directory)

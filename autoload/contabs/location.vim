@@ -1,9 +1,9 @@
 function! contabs#location#path(location)
-  return expand(a:location.path) . '/'
+  return expand(a:location.path)
 endfunction
 
 function! contabs#location#relative(location, path)
-  return substitute(a:path, contabs#location#path(a:location), '', '')
+  return contabs#path#relative(contabs#location#path(a:location), a:path)
 endfunction
 
 function! contabs#location#formatter(location)
@@ -19,19 +19,19 @@ function! contabs#location#formatter(location)
 endfunction
 
 function! contabs#location#search_pattern(location)
-  let l:pattern = join(map(range(a:location.depth), { _ -> '*/' }), '')
-  let l:directory = contabs#location#path(a:location)
+  let l:glob = join(map(range(a:location.depth), { _ -> '*' }), '/')
+  let l:base_directory = contabs#location#path(a:location)
 
   if a:location.git_only
-    return l:directory . l:pattern . '.git'
+    return contabs#path#join(l:base_directory, l:glob, '.git')
   endif
 
-  return l:directory . l:pattern
+  return contabs#path#join(l:base_directory, l:glob)
 endfunction
 
 function! contabs#location#entrypoint(location, subdir)
   for l:entrypoint in get(a:location, 'entrypoint', [])
-    let l:entry = expand(a:subdir . '/' . l:entrypoint)
+    let l:entry = expand(contabs#path#join(a:subdir, l:entrypoint))
 
     if filereadable(l:entry)
       return l:entry
@@ -47,7 +47,7 @@ function! contabs#location#find_by(subdir, locations)
     let l:search_pattern = substitute(l:search_pattern, '/\.git$', '', '')
     let l:search_pattern = glob2regpat(l:search_pattern)
 
-    if match(a:subdir, l:search_pattern) == 0
+    if match(contabs#path#to_directory(a:subdir), l:search_pattern) == 0
       return l:location
     endif
   endfor
