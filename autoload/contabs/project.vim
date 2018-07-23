@@ -1,58 +1,11 @@
-function! s:get_formatter(location, base_directory)
-  if has_key(a:location, 'formatter')
-    return a:location.formatter
-  endif
-
-  if a:location.depth <= 0
-    return { -> a:location.path }
-  endif
-
-  return { directory -> substitute(directory, a:base_directory, '', '') }
+function! s:project_for_path(directory)
+  let l:locations = contabs#project#locations
+  return [contabs#location#find_by(a:directory, l:locations), l:directory]
 endfunction
 
-function! s:get_entrypoint(location, directory)
-  for l:entrypoint in get(a:location, 'entrypoint', [])
-    let l:entry = expand(a:directory . '/' . l:entrypoint)
-
-    if filereadable(l:entry)
-      return l:entry
-    endif
-  endfor
-
-  return a:directory
-endfunction
-
-function! s:get_search_pattern(location, base_directory)
-  let l:pattern = join(map(range(a:location.depth), { _ -> '*/' }), '')
-
-  if a:location.git_only
-    return a:base_directory . l:pattern . '.git'
-  endif
-
-  return a:base_directory . l:pattern
-endfunction
-
-function! s:location_for_path(directory)
-  let l:absulote_directory = expand(a:directory) . '/'
-
-  for l:location in g:contabs#project#locations
-    let l:base_directory = expand(l:location.path) . '/'
-
-    let l:search_pattern = s:get_search_pattern(l:location, l:base_directory)
-    let l:search_pattern = substitute(l:search_pattern, '/\.git$', '', '')
-    let l:search_pattern = glob2regpat(l:search_pattern)
-
-    if match(l:absulote_directory, l:search_pattern) == 0
-      return [l:location, l:absulote_directory]
-    endif
-  endfor
-  return [{}, l:absulote_directory]
-endfunction
-
-function! s:subdirectories(location)
-  let l:base_directory = expand(a:location.path) . '/'
-  let l:search_pattern = s:get_search_pattern(a:location, l:base_directory)
-  let l:Format = s:get_formatter(a:location, l:base_directory)
+function! s:projects(location)
+  let l:search_pattern = contabs#location#search_pattern(a:location)
+  let l:Format = contabs#location#formatter(a:location)
 
   let l:subdirs = {}
   for l:search_result in glob(l:search_pattern, 1, 1)
@@ -67,27 +20,27 @@ function! s:all_projects()
   let l:projects = {}
 
   for l:location in g:contabs#project#locations
-    call extend(l:projects, s:subdirectories(location))
+    call extend(l:projects, s:projects(location))
   endfor
 
   return l:projects
 endfunction
 
-function! s:open(command, context)
+function! s:open(cmd, context)
   let [ l:location, l:directory ] = a:context
-  execute a:command . ' ' .  s:get_entrypoint(l:location, l:directory)
+  execute a:cmd . ' ' . contabs#location#entrypoint(l:location, l:directory)
   execute "tcd" l:directory
 endfunction
 
 
 function! contabs#project#edit(directory)
-  let l:location = s:location_for_path(a:directory)
-  call s:open('edit', l:location)
+  let l:project = s:project_for_path(expand(a:directory) . '/')
+  call s:open('edit', l:project)
 endfunction
 
 function! contabs#project#tabedit(directory)
-  let l:location = s:location_for_path(a:directory)
-  call s:open('tabedit', l:location)
+  let l:project = s:project_for_path(expand(a:directory) . '/')
+  call s:open('tabedit', l:project)
 endfunction
 
 function! contabs#project#select()
