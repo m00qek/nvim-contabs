@@ -57,3 +57,10 @@ directory. If you want to disable this feature add to your vimrc
 ```viml
 let g:contabs#integrations#airline = 0
 ```
+
+and there are other formats available for the tab titles
+```viml
+" you can use 'path', 'pathshorten', 'project/path' or 'project/pathshorten'
+let g:contabs#integrations#airline_theme = 'project/path'
+```
+
