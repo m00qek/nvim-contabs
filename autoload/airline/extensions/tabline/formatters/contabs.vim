@@ -23,7 +23,7 @@ function! s:title(tabnumber)
   elseif l:theme == 'pathshorten'
     return pathshorten(l:cwd)
   elseif l:theme == 'project/path'
-    return s:relative_to_project(l:cwd, { x -> x })
+    return s:relative_to_project(l:cwd, { dir -> dir })
   elseif l:theme == 'project/pathshorten'
     return s:relative_to_project(l:cwd, { dir -> pathshorten(dir) })
   endif

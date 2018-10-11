@@ -41,6 +41,10 @@ function! contabs#location#entrypoint(location, subdir)
   return a:subdir
 endfunction
 
+function! contabs#location#default(subdir)
+  return { 'path': a:subdir, 'depth': 0, 'git_only': 0 }
+endfunction
+
 function! contabs#location#find_by(subdir, locations)
   for l:location in a:locations
     let l:search_pattern = contabs#location#search_pattern(l:location)
@@ -52,5 +56,5 @@ function! contabs#location#find_by(subdir, locations)
     endif
   endfor
 
-  return {}
+  return contabs#location#default(a:subdir)
 endfunction

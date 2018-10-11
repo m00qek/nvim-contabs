@@ -34,18 +34,18 @@ endfunction
 
 
 function! contabs#project#edit(directory)
-  let l:project = s:project_for_path(expand(a:directory))
+  let l:project = s:project_for_path(a:directory)
   call s:open('edit', l:project)
 endfunction
 
 function! contabs#project#tabedit(directory)
-  let l:project = s:project_for_path(expand(a:directory))
+  let l:project = s:project_for_path(a:directory)
   call s:open('tabedit', l:project)
 endfunction
 
 function! contabs#project#select()
-  let l:actions = { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit' }
+  let l:actions = [ 'edit', { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit' } ]
 
   return contabs#window#open(
-  \ 'projects', s:all_projects(), funcref('s:open'), [ 'edit', l:actions ])
+  \ 'projects', s:all_projects(), funcref('s:open'), l:actions)
 endfunction
