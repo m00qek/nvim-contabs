@@ -2,33 +2,13 @@ function! s:contains(array, item)
   return index(a:array, a:item) >= 0
 endfunction
 
-function! s:relative_to_project(cwd, Formatter)
-  let l:location = contabs#location#find_by(a:cwd, g:contabs#project#locations)
-  let l:relative_path = contabs#location#relative(l:location, a:cwd)
+function! s:title(current_tab)
+  let l:cwd = getcwd(1, a:current_tab)
+  let l:current_theme = g:contabs#integrations#airline_theme
+  let l:location = contabs#location#find_by(l:cwd, g:contabs#project#locations)
 
-  if l:relative_path == '.'
-    let l:Formatter = contabs#location#formatter(l:location)
-    return l:Formatter(a:cwd)
-  else
-    return a:Formatter(l:relative_path)
-  endif
-endfunction
-
-function! s:title(tabnumber)
-  let l:theme = g:contabs#integrations#airline_theme
-  let l:cwd = getcwd(1, a:tabnumber)
-
-  if l:theme == 'path'
-    return l:cwd
-  elseif l:theme == 'pathshorten'
-    return pathshorten(l:cwd)
-  elseif l:theme == 'project/path'
-    return s:relative_to_project(l:cwd, { dir -> dir })
-  elseif l:theme == 'project/pathshorten'
-    return s:relative_to_project(l:cwd, { dir -> pathshorten(dir) })
-  endif
-
-  return fnamemodify(l:cwd, ':t')
+  let l:Formatter = contabs#integrations#tabline#formatter(l:current_theme)
+  return l:Formatter(l:location, l:cwd)
 endfunction
 
 function! airline#extensions#tabline#formatters#contabs#format(bufnr, buffers)
@@ -43,4 +23,3 @@ function! airline#extensions#tabline#formatters#contabs#format(bufnr, buffers)
     endif
   endfor
 endfunction
-

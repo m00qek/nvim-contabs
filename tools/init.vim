@@ -1,7 +1,7 @@
 let mapleader = "\<Space>"
 
 let g:contabs#project#locations = [
-  \ { 'path': '~', 'depth': 1, 'git_only': 0 },
+  \ { 'path': '~', 'depth': 1, 'git_only': v:false },
   \]
 
 command! -nargs=1 -complete=dir EP call contabs#project#edit(<q-args>)

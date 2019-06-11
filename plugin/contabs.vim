@@ -3,11 +3,11 @@ if ! exists('g:contabs#project#locations')
 endif
 
 if ! exists('g:contabs#integrations#airline_theme')
-  let g:contabs#integrations#airline_theme = 'dirname'
+  let g:contabs#integrations#airline_theme = 'basename'
 endif
 
 if ! exists('g:contabs#integrations#airline')
-  let g:contabs#integrations#airline = 1
+  let g:contabs#integrations#airline = v:true
 endif
 
 if g:contabs#integrations#airline

@@ -55,7 +55,7 @@ by default this plugin changes titles of tabs to the name of the working
 directory. If you want to disable this feature add to your vimrc
 
 ```viml
-let g:contabs#integrations#airline = 0
+let g:contabs#integrations#airline = v:false
 ```
 
 and there are other formats available for the tab titles
