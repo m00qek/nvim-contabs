@@ -83,3 +83,12 @@ call contabs#integrations#tabline#register('myformatter',
 
 where `location` is the related entry in `g:contabs#project#locations` and `cwd`
 is the current tab working directory
+
+### Contributing
+
+To test you changes to the code you should use 
+
+```bash
+make prepare 
+make nvim
+``` 
