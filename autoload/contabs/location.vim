@@ -1,9 +1,26 @@
-function! contabs#location#path(location)
+function! s:default_config(subdir)
+  return { 'path': a:subdir, 'depth': 0, 'git_only': v:false }
+endfunction
+
+function! s:expanded_path(location)
   return expand(a:location.path)
 endfunction
 
+function! s:entrypoint(location)
+  return get(a:location, 'entrypoint', [])
+endfunction
+
+function! s:git_only(location)
+  return get(a:location, 'git_only', v:false)
+endfunction
+
+function! s:depth(location)
+  return get(a:location, 'depth', 0)
+endfunction
+
+
 function! contabs#location#relative(location, path)
-  return contabs#path#relative(contabs#location#path(a:location), a:path)
+  return contabs#path#relative(s:expanded_path(a:location), a:path)
 endfunction
 
 function! contabs#location#formatter(location)
@@ -11,7 +28,7 @@ function! contabs#location#formatter(location)
     return a:location.formatter
   endif
 
-  if a:location.depth <= 0
+  if s:depth(a:location) <= 0
     return { -> a:location.path }
   endif
 
@@ -19,10 +36,10 @@ function! contabs#location#formatter(location)
 endfunction
 
 function! contabs#location#search_pattern(location)
-  let l:glob = join(map(range(a:location.depth), { _ -> '*' }), '/')
-  let l:base_directory = contabs#location#path(a:location)
+  let l:glob = join(map(range(s:depth(a:location)), { _ -> '*' }), '/')
+  let l:base_directory = s:expanded_path(a:location)
 
-  if a:location.git_only
+  if s:git_only(a:location)
     return contabs#path#join(l:base_directory, l:glob, '.git')
   endif
 
@@ -30,7 +47,7 @@ function! contabs#location#search_pattern(location)
 endfunction
 
 function! contabs#location#entrypoint(location, subdir)
-  for l:entrypoint in get(a:location, 'entrypoint', [])
+  for l:entrypoint in s:entrypoint(a:location)
     let l:entry = expand(contabs#path#join(a:subdir, l:entrypoint))
 
     if filereadable(l:entry)
@@ -39,10 +56,6 @@ function! contabs#location#entrypoint(location, subdir)
   endfor
 
   return a:subdir
-endfunction
-
-function! contabs#location#default(subdir)
-  return { 'path': a:subdir, 'depth': 0, 'git_only': 0 }
 endfunction
 
 function! contabs#location#find_by(subdir, locations)
@@ -56,5 +69,5 @@ function! contabs#location#find_by(subdir, locations)
     endif
   endfor
 
-  return contabs#location#default(a:subdir)
+  return s:default_config(a:subdir)
 endfunction

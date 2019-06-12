@@ -48,12 +48,12 @@ let g:contabs#project#locations = [
 
 Each item in the array is a `location`. You can add more options to the map:
 
-|   option   |                    effect                     | default  |
-| ---------- | --------------------------------------------- | -------- |
-| depth      | the level of subdirectories                   | 0        |
-| git_only   | list only git repos                           | v:false  |
-| entrypoint | file to show when opening project             | []       |
-| formatter  | function to format project name on FZF buffer | identity |
+|   option   |                    effect                     |  default   |
+| ---------- | --------------------------------------------- | ---------- |
+| depth      | the level of subdirectories                   | 0          |
+| git_only   | list only git repos                           | v:false    |
+| entrypoint | file to show when opening project             | []         |
+| formatter  | function to format project name on FZF buffer | { x -> x } |
 
 Some examples of `locations`:
 
