@@ -1,4 +1,4 @@
-Contextual tabs for neovim
+Contextual tabs for vim/neovim
 
 ---
 
