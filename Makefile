@@ -31,3 +31,6 @@ prepare: clean
 
 nvim:
 	@CONTABS=$(CONTABS) nvim -u $(TOOLS)/init.vim --cmd "set rtp=$(CONTABS),$(PLUGINS)/fzf,$(PLUGINS)/fzf.vim"
+
+vim:
+	@CONTABS=$(CONTABS) vim -u $(TOOLS)/init.vim --cmd "set rtp=$(CONTABS),$(PLUGINS)/fzf,$(PLUGINS)/fzf.vim"

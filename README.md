@@ -2,7 +2,8 @@ Contextual tabs for neovim
 
 ---
 
-Neovim has a neat feature: each tab can have a different working directory. This
+Neovim (and [just recently](https://github.com/vim/vim/releases/tag/v8.1.1218)
+vim!) has a neat feature: each tab can have a different working directory. This
 plugin adds some functions and [fzf](https://github.com/junegunn/fzf) commands
 to change the working directory of tabs.
 
@@ -125,4 +126,5 @@ To test you changes to the code you should use
 ```bash
 make prepare
 make nvim
+make vim
 ```
