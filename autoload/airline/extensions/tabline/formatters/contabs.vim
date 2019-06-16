@@ -3,7 +3,6 @@ function! s:contains(array, item)
 endfunction
 
 function! airline#extensions#tabline#formatters#contabs#format(bufnr, buffers)
-  let l:current_theme = g:contabs#integrations#airline_theme
   let l:all_tabs = range(1, tabpagenr('$'))
   let l:current_buffer = a:bufnr
 
@@ -11,7 +10,7 @@ function! airline#extensions#tabline#formatters#contabs#format(bufnr, buffers)
     let l:tab_buffers = tabpagebuflist(l:current_tab)
 
     if s:contains(l:tab_buffers, l:current_buffer)
-      return contabs#integrations#tabline#label(l:current_tab, l:current_theme)
+      return contabs#integrations#tabline#raw_label(l:current_tab)
     endif
   endfor
 endfunction
