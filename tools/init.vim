@@ -24,3 +24,6 @@ nnoremap <silent> <Leader>b :call contabs#buffer#select()<CR>
 
 " Hotkey for default FZF action
 nnoremap <silent> <Leader>f :<C-u>Files<CR><C-u>
+
+let g:contabs#integrations#tabline#theme = 'project/path'
+set guitablabel=%{contabs#integrations#tabline#label(tabpagenr())}
