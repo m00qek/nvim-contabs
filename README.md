@@ -105,14 +105,14 @@ formatters using:
 ```viml
 " you can use 'basename', 'path', 'pathshorten', 'project/path' or
 " 'project/pathshorten'
-let g:contabs#integrations#airline_theme = 'project/path'
+let g:contabs#integrations#tabline#theme = 'project/path'
 ```
 
 If you want to write you own `formatter` use
 
 ```viml
-let g:contabs#integrations#airline_theme = 'myformatter'
-call contabs#integrations#tabline#register('myformatter',
+let g:contabs#integrations#tabline#theme = 'mytheme'
+call contabs#integrations#tabline#register('mytheme',
 \  { location, cwd ->  location.path . " | " . cwd })
 ```
 

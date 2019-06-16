@@ -17,19 +17,21 @@ let s:formatters = {
 \  'project/pathshorten' : { location, cwd -> s:relative_to(location, cwd, { dir -> pathshorten(cwd)}) },
 \}
 
-function! contabs#integrations#tabline#register(name, Formatter)
-  let s:formatters[a:name] = a:Formatter
+function! contabs#integrations#tabline#register(theme, Formatter)
+  let s:formatters[a:theme] = a:Formatter
 endfunction
 
-function! contabs#integrations#tabline#formatter(name)
+function! contabs#integrations#tabline#formatter(theme)
   let l:DefaultFormatter = get(s:formatters, 'basename')
-  return get(s:formatters, a:name, l:DefaultFormatter)
+  return get(s:formatters, a:theme, l:DefaultFormatter)
 endfunction
 
-function! contabs#integrations#tabline#label(tabpagenr, formatter_name)
+function! contabs#integrations#tabline#raw_label(tabpagenr)
   let l:cwd = getcwd(1, a:tabpagenr)
-  let l:location = contabs#location#find_by(l:cwd, g:contabs#project#locations)
 
-  let l:Formatter = contabs#integrations#tabline#formatter(a:formatter_name)
+  let l:location = contabs#location#find_by(l:cwd, g:contabs#project#locations)
+  let l:theme = g:contabs#integrations#tabline#theme
+
+  let l:Formatter = contabs#integrations#tabline#formatter(l:theme)
   return l:Formatter(l:location, l:cwd)
 endfunction
