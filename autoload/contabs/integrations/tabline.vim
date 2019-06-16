@@ -25,3 +25,11 @@ function! contabs#integrations#tabline#formatter(name)
   let l:DefaultFormatter = get(s:formatters, 'basename')
   return get(s:formatters, a:name, l:DefaultFormatter)
 endfunction
+
+function! contabs#integrations#tabline#label(tabpagenr, formatter_name)
+  let l:cwd = getcwd(1, a:tabpagenr)
+  let l:location = contabs#location#find_by(l:cwd, g:contabs#project#locations)
+
+  let l:Formatter = contabs#integrations#tabline#formatter(a:formatter_name)
+  return l:Formatter(l:location, l:cwd)
+endfunction
