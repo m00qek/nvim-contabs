@@ -97,9 +97,28 @@ add to your config:
 let g:contabs#integrations#airline = v:false
 ```
 
-The titles are provided by `formatters`, which are functions operating over the
+### vanilla vim/neovim tabline
+
+If you use `gvim`, add to your config:
+
+```viml
+set guitablabel=%{contabs#integrations#tabline#label(tabpagenr())}
+```
+or, if you are using vim/neovim on terminal:
+
+```viml
+set tabline=%!contabs#integrations#tabline#create()
+```
+
+If you want to create your own tabline function, you can use the function
+`contabs#integrations#tabline#raw_label(tabpagenr())` to just eval the chosen 
+formatter.
+
+### Tabline
+
+The labels are provided by `formatters`, which are functions operating over the
 tab current directory and location config. You can choose one of the
-[predefined](https://github.com/m00qek/nvim-contabs/blob/master/autoload/contabs/integrations/tabline.vim#L12)
+[predefined](https://github.com/m00qek/nvim-contabs/blob/master/autoload/contabs/integrations/tabline.vim#L38)
 formatters using:
 
 ```viml
