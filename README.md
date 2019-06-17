@@ -122,8 +122,8 @@ tab current directory and location config. You can choose one of the
 formatters using:
 
 ```viml
-" you can use 'basename', 'path', 'pathshorten', 'project/path' or
-" 'project/pathshorten'
+" you can use 'basename', 'path', 'pathshorten', 'project/path',
+" 'project/pathshorten' or 'location/formatter'
 let g:contabs#integrations#tabline#theme = 'project/path'
 ```
 
