@@ -3,7 +3,8 @@ set nocompatible
 let mapleader = "\<Space>"
 
 let g:contabs#project#locations = [
-\ { 'path': '$CONTABS/tools/', 'entrypoint': ['init.vim'], 'formatter': { _ -> 'Neovim Configuration' }},
+\ { 'path': '$CONTABS', 'entrypoint': ['README.md'], 'formatter': { _ -> 'contabs' }},
+\ { 'path': '$CONTABS/tools', 'entrypoint': ['init.vim'], 'formatter': { _ -> 'Neovim Configuration' }},
 \ { 'path': '$CONTABS/tools/projects', 'depth': 2, 'git_only': v:true, 'entrypoint': ['project.clj']},
 \ { 'path': '$CONTABS/tools/projects', 'depth': 1, 'git_only': v:true},
 \]
@@ -27,3 +28,4 @@ nnoremap <silent> <Leader>f :<C-u>Files<CR><C-u>
 
 let g:contabs#integrations#tabline#theme = 'project/path'
 set guitablabel=%{contabs#integrations#tabline#label(tabpagenr())}
+set tabline=%!contabs#integrations#tabline#create()
