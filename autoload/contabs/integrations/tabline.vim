@@ -27,6 +27,14 @@ function! s:modified(tabnr)
   return ''
 endfunction
 
+function! s:label(tabnr, is_current)
+  let l:style = a:is_current ? '%#TabLineSel#' : '%#TabLine#'
+  let l:label = '%{contabs#integrations#tabline#label('.a:tabnr.')}'
+  let l:number = '%'.a:tabnr.'T'
+
+  return l:style . l:number . ' ' . l:label . ' '
+endfunction
+
 let s:formatters = {
 \  'path'                : { _, cwd -> cwd },
 \  'basename'            : { _, cwd -> fnamemodify(cwd, ':t') },
@@ -34,6 +42,7 @@ let s:formatters = {
 \  'project/path'        : { location, cwd -> s:relative_to(location, cwd, { dir -> dir }) },
 \  'project/pathshorten' : { location, cwd -> s:relative_to(location, cwd, { dir -> pathshorten(cwd)}) },
 \}
+
 
 function! contabs#integrations#tabline#register(theme, Formatter)
   let s:formatters[a:theme] = a:Formatter
@@ -57,4 +66,14 @@ endfunction
 function! contabs#integrations#tabline#label(tabnr)
   let l:raw_label = contabs#integrations#tabline#raw_label(a:tabnr)
   return trim(s:wincount(a:tabnr) . s:modified(a:tabnr) . ' ' . l:raw_label)
+endfunction
+
+function! contabs#integrations#tabline#create()
+  let l:all_tabs = range(1, tabpagenr('$'))
+  let l:selected_tab = tabpagenr()
+
+  let l:labels = map(l:all_tabs, { _, tab -> s:label(tab, l:selected_tab == tab) })
+  let l:close_button = len(l:all_tabs) > 1 ? '%=%#TabLine#%999XX' : ''
+
+  return join(l:labels) . '%#TabLineFill#%T' . l:close_button
 endfunction
