@@ -41,6 +41,7 @@ let s:formatters = {
 \  'pathshorten'         : { _, cwd -> pathshorten(cwd) },
 \  'project/path'        : { location, cwd -> s:relative_to(location, cwd, { dir -> dir }) },
 \  'project/pathshorten' : { location, cwd -> s:relative_to(location, cwd, { dir -> pathshorten(cwd)}) },
+\  'location/formatter'  : { location, cwd -> contabs#location#formatter(location)(cwd) },
 \}
 
 
