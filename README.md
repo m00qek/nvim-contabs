@@ -83,7 +83,8 @@ The following nmaps open the FZF buffer:
 nnoremap <silent> <Leader>p :call contabs#project#select()<CR>
 
 "invoke fzf with the list of buffers of current tab working directory
-"the enabled hotkeys are { 'ctrl-t': 'tabedit', 'ctrl-e, <cr>': 'edit', 'ctrl-v': 'vsp', 'ctrl-x': 'sp' }
+"the enabled hotkeys are defined in g:fzf_action, but if this var is not 
+"defined the command will use { 'ctrl-t': 'tabedit', 'ctrl-e, <cr>': 'edit', 'ctrl-v': 'vsp', 'ctrl-x': 'sp' }
 nnoremap <silent> <Leader>b :call contabs#buffer#select()<CR>
 ```
 

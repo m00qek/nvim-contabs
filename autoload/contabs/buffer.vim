@@ -41,12 +41,11 @@ function! s:buffers(base_directory)
 endfunction
 
 function! contabs#buffer#select()
-  let s:actions = {
-    \ 'ctrl-t': 'tabedit',
-    \ 'ctrl-v': 'vsplit',
-    \ 'ctrl-x': 'split',
-    \ 'ctrl-e': 'edit'
-    \ }
+  let s:actions = get(g:, 'fzf_action', { 'ctrl-t': 'tabedit',
+                                        \ 'ctrl-v': 'vsplit',
+                                        \ 'ctrl-x': 'split',
+                                        \ 'ctrl-e': 'edit'
+                                        \ })
 
   return contabs#window#open(
   \ 'buffers', s:buffers(getcwd()), funcref('s:open'), [ 'edit', s:actions ])
