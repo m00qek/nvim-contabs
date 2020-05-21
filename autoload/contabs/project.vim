@@ -28,8 +28,24 @@ endfunction
 
 function! s:open(cmd, context)
   let [ l:location, l:directory ] = a:context
+
   execute a:cmd . ' ' . contabs#location#entrypoint(l:location, l:directory)
   execute "tcd" l:directory
+endfunction
+
+function! s:select_or_open(cmd, context)
+  let [ _, l:directory ] = a:context
+
+  for l:tab in range(1, tabpagenr('$'))
+    let l:tab_directory = getcwd(-1, l:tab)
+
+    if l:directory == l:tab_directory
+      execute 'tabnext ' . l:tab
+      return
+    endif
+  endfor
+
+  call s:open(a:cmd, a:context)
 endfunction
 
 
@@ -47,5 +63,5 @@ function! contabs#project#select()
   let l:actions = [ 'edit', { 'ctrl-t': 'tabedit', 'ctrl-e': 'edit' } ]
 
   return contabs#window#open(
-  \ 'projects', s:all_projects(), funcref('s:open'), l:actions)
+  \ 'projects', s:all_projects(), funcref('s:select_or_open'), l:actions)
 endfunction
