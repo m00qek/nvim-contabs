@@ -40,7 +40,7 @@ let s:formatters = {
 \  'basename'            : { _, cwd -> fnamemodify(cwd, ':t') },
 \  'pathshorten'         : { _, cwd -> pathshorten(cwd) },
 \  'project/path'        : { location, cwd -> s:relative_to(location, cwd, { dir -> dir }) },
-\  'project/pathshorten' : { location, cwd -> s:relative_to(location, cwd, { dir -> pathshorten(cwd)}) },
+\  'project/pathshorten' : { location, cwd -> s:relative_to(location, cwd, { dir -> pathshorten(dir)}) },
 \  'location/formatter'  : { location, cwd -> contabs#location#formatter(location)(cwd) },
 \}
 
